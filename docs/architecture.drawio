@@ -1,0 +1,109 @@
+<mxfile host="app.diagrams.net" agent="chronicle-builder" version="24.0.0">
+  <diagram name="Chronicle Architecture" id="chronicle-arch">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="Chronicle - Solution Flow Architecture" style="text;html=1;align=center;verticalAlign=middle;fontSize=22;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="700" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="anth" value="&lt;b&gt;Anthropic SDK&lt;/b&gt;&lt;br/&gt;messages.create(...)&lt;br/&gt;usage.input_tokens" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="110" width="210" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="openai" value="&lt;b&gt;OpenAI SDK&lt;/b&gt;&lt;br/&gt;chat.completions.create(...)&lt;br/&gt;usage.prompt_tokens" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="190" width="210" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="tools" value="&lt;b&gt;Custom Tools&lt;/b&gt;&lt;br/&gt;any Python callable&lt;br/&gt;wrapped with @tool" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="270" width="210" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="user" value="&lt;b&gt;User Agent Code&lt;/b&gt;&lt;br/&gt;your application logic&lt;br/&gt;calls LLM SDKs and tools" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="380" y="110" width="360" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="ergo" value="&lt;b&gt;Ergonomics Layer&lt;/b&gt;&lt;br/&gt;@llm   @tool   span()   record()&lt;br/&gt;contextvars-based parent threading" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="380" y="250" width="360" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="record" value="&lt;b&gt;Chronicle.record(...)&lt;/b&gt;&lt;br/&gt;builds Event, links parents, indexes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="380" y="360" width="360" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="event" value="&lt;b&gt;Event (frozen, content-addressed)&lt;/b&gt;&lt;br/&gt;id = blake2b(canonical_json(kind, actor,&lt;br/&gt;payload, parents, meta))   //   telemetry NOT hashed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="380" y="440" width="360" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="dag" value="&lt;b&gt;Chronicle DAG (in-memory)&lt;/b&gt;&lt;br/&gt;_events: id -&amp;gt; Event   _children: id -&amp;gt; {ids}&lt;br/&gt;_order: insertion order list" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="380" y="560" width="360" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="persist" value="&lt;b&gt;Persistence&lt;/b&gt;&lt;br/&gt;Chronicle.dump(path)   Chronicle.load(path)&lt;br/&gt;JSONL  -  re-verifies integrity on load" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="380" y="680" width="360" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="dash" value="&lt;b&gt;Streamlit Dashboard&lt;/b&gt;&lt;br/&gt;chronicle-dashboard &amp;lt;trace.jsonl&amp;gt;&lt;br/&gt;Overview . LLM . Tool . DAG . Search . Raw" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="380" y="780" width="360" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="browser" value="&lt;b&gt;Browser @ http://localhost:8501&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="380" y="890" width="360" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="v_causal" value="&lt;b&gt;Causal Queries&lt;/b&gt;&lt;br/&gt;ancestors / descendants / why(eid)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="830" y="370" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="v_integ" value="&lt;b&gt;Integrity&lt;/b&gt;&lt;br/&gt;verify() / root()   Merkle over ids" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="830" y="445" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="v_sem" value="&lt;b&gt;Semantic Index&lt;/b&gt;&lt;br/&gt;HashingEmbedder   cosine top-k" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="830" y="520" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="v_tele" value="&lt;b&gt;Telemetry Rollup&lt;/b&gt;&lt;br/&gt;stats(): tokens, latency, cost" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="830" y="595" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="v_branch" value="&lt;b&gt;Counterfactual Branch&lt;/b&gt;&lt;br/&gt;branch_at(eid) / diff()   exact set algebra" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="830" y="670" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="deco_label" value="@llm   @tool   span()   record()" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="380" y="207" width="360" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="e0" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="anth" target="user">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="openai" target="user">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="tools" target="user">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="user" target="ergo">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="ergo" target="record">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="record" target="event">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="event" target="dag">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="dag" target="v_causal">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="dag" target="v_integ">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="dag" target="v_sem">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="dag" target="v_tele">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="dag" target="v_branch">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="dag" target="persist">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="persist" target="dash">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e14" style="endArrow=classic;html=1;rounded=0;strokeColor=#555555;" edge="1" parent="1" source="dash" target="browser">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
