@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "chronicle"
-version = "0.1.0"
-description = "Merkle-DAG agent traceability with causal, integrity, and semantic views."
+version = "0.2.0"
+description = "Merkle-DAG agent traceability with causal, integrity, semantic, and telemetry views."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -16,6 +16,15 @@ dependencies = [
 
 [project.optional-dependencies]
 st = ["sentence-transformers>=2.2"]
+dashboard = [
+    "streamlit>=1.30",
+    "pandas>=2.0",
+    "matplotlib>=3.7",
+    "networkx>=3.0",
+]
+
+[project.scripts]
+chronicle-dashboard = "chronicle.dashboard:cli"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/chronicle"]
